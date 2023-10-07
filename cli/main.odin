@@ -22,12 +22,12 @@ main :: proc() {
 		}
 		defer os.file_info_delete(info)
 
-		if info.is_dir do xor_dir(info)
-		else do xor_file(info)
+		if info.is_dir do walk_dir(info)
+		else do scramble_file(info)
 	}
 }
 
-xor_dir :: proc(info: os.File_Info) {
+walk_dir :: proc(info: os.File_Info) {
 	// Skip hidden directories
 	if info.name[0] == '.' do return
 
@@ -40,12 +40,12 @@ xor_dir :: proc(info: os.File_Info) {
 
 	files, _ := os.read_dir(fd, 0)
 	for file in files {
-		if file.is_dir do xor_dir(file)
-		else do xor_file(file)
+		if file.is_dir do walk_dir(file)
+		else do scramble_file(file)
 	}
 }
 
-xor_file :: proc(info: os.File_Info) {
+scramble_file :: proc(info: os.File_Info) {
 	// Skip hidden files
 	if info.name[0] == '.' do return
 
