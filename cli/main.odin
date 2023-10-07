@@ -1,4 +1,4 @@
-package main
+package scrambler
 
 import "core:encoding/base64"
 import "core:fmt"

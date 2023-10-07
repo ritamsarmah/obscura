@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-odin build . -out:crypt -o:speed
+odin build . -out:scram -o:speed
