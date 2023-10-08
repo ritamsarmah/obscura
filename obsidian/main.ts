@@ -8,8 +8,11 @@ export default class Scrambler extends Plugin {
     this.addCommand({
       id: 'scramble-current-file',
       name: 'Scramble current file',
-      editorCallback: (_: Editor, view: MarkdownView) => {
-        let file = view.file;
+      checkCallback: (checking) => {
+        // Check that a file is open and focused
+        let file = this.app.workspace.getActiveFile();
+        if (checking) return file != null;
+
         if (file != null) {
           this.scramble(file);
         }
