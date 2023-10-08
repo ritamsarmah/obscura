@@ -8,22 +8,24 @@ export default class Scrambler extends Plugin {
       id: 'scramble-current-file',
       name: 'Scramble current file',
       editorCallback: (_: Editor, view: MarkdownView) => {
-        console.log("hello from editor 2");
-        console.log(view.file);
-
-        let file = view.file
-        if (file == null) return;
-
-        this.scramble(file).then(data => {
-          if (file != null) {
-            this.app.vault.modify(file, data);
-          }
-        });
+        let file = view.file;
+        if (file != null) {
+          this.scramble(file);
+        }
       },
+    });
+
+    this.addCommand({
+      id: 'scramble-vault',
+      name: 'Scramble vault',
+      callback: () => {
+        let files = this.app.vault.getFiles()
+        files.forEach(file => this.scramble(file));
+      }
     });
   }
 
-  private async scramble(file: TFile): Promise<string> {
+  private async scramble(file: TFile) {
     let contents = await this.app.vault.read(file);
     const encrypted = contents.startsWith(marker);
 
@@ -37,11 +39,13 @@ export default class Scrambler extends Plugin {
     }
 
     if (encrypted) {
-      // Return decrypted data
-      return data.join("");
+      // Decrypted data
+      contents = data.join("");
     } else {
-      // Return encrypted data after base64 encoding
-      return marker + btoa(data.join(""));
+      // Encrypted data after base64 encoding
+      contents = marker + btoa(data.join(""));
     }
+
+    this.app.vault.modify(file, contents);
   }
 }
