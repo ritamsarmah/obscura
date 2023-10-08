@@ -23,7 +23,7 @@ main :: proc() {
 		defer os.file_info_delete(info)
 
 		if info.is_dir do walk_dir(info)
-		else do scramble_file(info)
+		else do toggle_file(info)
 	}
 }
 
@@ -41,11 +41,11 @@ walk_dir :: proc(info: os.File_Info) {
 	files, _ := os.read_dir(fd, 0)
 	for file in files {
 		if file.is_dir do walk_dir(file)
-		else do scramble_file(file)
+		else do toggle_file(file)
 	}
 }
 
-scramble_file :: proc(info: os.File_Info) {
+toggle_file :: proc(info: os.File_Info) {
 	// Skip hidden files
 	if info.name[0] == '.' do return
 

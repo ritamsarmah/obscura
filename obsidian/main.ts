@@ -1,4 +1,4 @@
-import { Editor, MarkdownView, Plugin, TFile } from 'obsidian';
+import { Plugin, TFile } from 'obsidian';
 import { Base64 } from 'js-base64';
 
 const marker = "$~>";
@@ -6,50 +6,83 @@ const marker = "$~>";
 export default class Scrambler extends Plugin {
   async onload() {
     this.addCommand({
-      id: 'scramble-current-file',
-      name: 'Scramble current file',
+      id: 'scrambler-toggle-current-file',
+      name: 'Toggle current file encryption',
       checkCallback: (checking) => {
         // Check that a file is open and focused
         let file = this.app.workspace.getActiveFile();
         if (checking) return file != null;
 
-        if (file != null) {
-          this.scramble(file);
-        }
+        if (file != null) this.toggleFile(file);
       },
     });
 
     this.addCommand({
-      id: 'scramble-vault',
-      name: 'Scramble vault',
+      id: 'scrambler-encrypt-vault',
+      name: 'Encrypt vault',
       callback: () => {
         let files = this.app.vault.getFiles()
-        files.forEach(file => this.scramble(file));
+        files.forEach(file => this.encryptFile(file));
+      }
+    });
+
+    this.addCommand({
+      id: 'scrambler-decrypt-vault',
+      name: 'Decrypt vault',
+      callback: () => {
+        let files = this.app.vault.getFiles()
+        files.forEach(file => this.decryptFile(file));
       }
     });
   }
 
-  private async scramble(file: TFile) {
-    let contents = await this.app.vault.read(file);
-    const encrypted = contents.startsWith(marker);
+  private async toggleFile(file: TFile) {
+    let text = await this.app.vault.read(file);
+    const encrypted = text.startsWith(marker);
 
-    // If decrypting, decode from base64 (removing marker)
-    if (encrypted) contents = Base64.decode(contents.slice(marker.length));
+    text = encrypted ? this.decrypt(text) : this.encrypt(text);
+    this.app.vault.modify(file, text);
+  }
 
-    // Iterate through data and use index to XOR
-    let data = [...contents];
-    for (let i = 0; i < data.length; i++) {
-      data[i] = String.fromCharCode(contents.charCodeAt(i) ^ (i % 32));
+  private async encryptFile(file: TFile) {
+    let text = await this.app.vault.read(file);
+    const encrypted = text.startsWith(marker);
+
+    if (!encrypted) {
+      text = this.encrypt(text);
+      this.app.vault.modify(file, text);
     }
+  }
+
+  private async decryptFile(file: TFile) {
+    let text = await this.app.vault.read(file);
+    const encrypted = text.startsWith(marker);
 
     if (encrypted) {
-      // Decrypted data
-      contents = data.join("");
-    } else {
-      // Encrypted data after base64 encoding
-      contents = marker + Base64.encode(data.join(""));
+      text = this.decrypt(text);
+      this.app.vault.modify(file, text);
+    }
+  }
+
+  private encrypt(text: string): string {
+    // Encode to base64 after XOR'ing
+    text = this.xor(text);
+    return marker + Base64.encode(text);
+  }
+
+  private decrypt(data: string): string {
+    // Decode from base64 (ignoring marker) and XOR
+    data = Base64.decode(data.slice(marker.length));
+    return this.xor(data)
+  }
+
+  private xor(text: string): string {
+    // Iterate thrugh data and use index to XOR
+    let data = new Array(text.length)
+    for (let i = 0; i < text.length; i++) {
+      data[i] = String.fromCharCode(text.charCodeAt(i) ^ (i % 32));
     }
 
-    this.app.vault.modify(file, contents);
+    return data.join("");
   }
 }
