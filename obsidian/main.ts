@@ -1,4 +1,5 @@
 import { Editor, MarkdownView, Plugin, TFile } from 'obsidian';
+import { Base64 } from 'js-base64';
 
 const marker = "$~>";
 
@@ -30,7 +31,7 @@ export default class Scrambler extends Plugin {
     const encrypted = contents.startsWith(marker);
 
     // If decrypting, decode from base64 (removing marker)
-    if (encrypted) contents = atob(contents.slice(marker.length));
+    if (encrypted) contents = Base64.decode(contents.slice(marker.length));
 
     // Iterate through data and use index to XOR
     let data = [...contents];
@@ -43,7 +44,7 @@ export default class Scrambler extends Plugin {
       contents = data.join("");
     } else {
       // Encrypted data after base64 encoding
-      contents = marker + btoa(data.join(""));
+      contents = marker + Base64.encode(data.join(""));
     }
 
     this.app.vault.modify(file, contents);
