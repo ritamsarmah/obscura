@@ -10,7 +10,7 @@ MARKER: string : "$~>"
 
 main :: proc() {
 	if len(os.args) < 2 {
-		fmt.eprintln("Usage: cryptaxor PATH...")
+		fmt.eprintln("Usage: scram PATH...")
 		os.exit(1)
 	}
 
