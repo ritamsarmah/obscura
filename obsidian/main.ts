@@ -77,7 +77,7 @@ export default class Scrambler extends Plugin {
   }
 
   private xor(text: string): string {
-    // Iterate thrugh data and use index to XOR
+    // Iterate through data and use index to XOR
     let data = new Array(text.length)
     for (let i = 0; i < text.length; i++) {
       data[i] = String.fromCharCode(text.charCodeAt(i) ^ (i % 32));
