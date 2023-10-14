@@ -1,4 +1,4 @@
-use base64::{engine::general_purpose::STANDARD_NO_PAD as b64, Engine as _};
+use base64::{engine::general_purpose::STANDARD as b64, Engine as _};
 
 use std::path::{Path, PathBuf};
 use std::process::exit;
@@ -38,11 +38,18 @@ fn parse_args() -> (PathBuf, Action) {
 }
 
 fn obscura(path: &Path, action: Action) {
+    if path.exists() {
+        eprintln!("Error: Path not found");
+        exit(1);
+    }
+
     if is_hidden(path) {
         return;
-    } else if path.is_dir() {
+    }
+
+    if path.is_dir() {
         walk_dir(path, action)
-    } else {
+    } else if path.is_file() {
         let extension = path
             .extension()
             .and_then(|s| s.to_str())
