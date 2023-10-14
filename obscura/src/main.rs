@@ -21,7 +21,7 @@ fn parse_args() -> (PathBuf, Action) {
     let args: Vec<String> = env::args().collect();
 
     if args.len() != 3 || !args[1].starts_with('-') {
-        eprintln!("Usage: obscura [-e | -d] PATH...");
+        eprintln!("Usage: obscura [-e | -d] PATH");
         exit(1);
     }
 
