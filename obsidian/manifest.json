@@ -1,9 +1,9 @@
 {
-	"id": "scrambler",
-	"name": "Scrambler",
+	"id": "obscura",
+	"name": "obscura",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Simple scrambler to conceal the contents of a file",
+	"description": "Simple and fast text file obfuscation",
 	"author": "Ritam Sarmah",
 	"authorUrl": "https://ritam.me",
 	"isDesktopOnly": false

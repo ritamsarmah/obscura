@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-scrambler-plugin",
+	"name": "obsidian-obscura-plugin",
 	"version": "1.0.0",
-	"description": "Simple scrambler to conceal the contents of a file",
+	"description": "Simple and fast text obfuscation",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",

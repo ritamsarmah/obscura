@@ -3,10 +3,10 @@ import { Base64 } from "js-base64";
 
 const marker = "$~>";
 
-export default class Scrambler extends Plugin {
+export default class Obscura extends Plugin {
     async onload() {
         this.addCommand({
-            id: "scrambler-toggle-current-file",
+            id: "obscura-toggle-current-file",
             name: "Toggle current file encryption",
             checkCallback: checking => {
                 // Check that a file is open and focused
@@ -18,7 +18,7 @@ export default class Scrambler extends Plugin {
         });
 
         this.addCommand({
-            id: "scrambler-encrypt-vault",
+            id: "obscura-encrypt-vault",
             name: "Encrypt vault",
             callback: () => {
                 let files = this.app.vault.getFiles();
@@ -27,7 +27,7 @@ export default class Scrambler extends Plugin {
         });
 
         this.addCommand({
-            id: "scrambler-decrypt-vault",
+            id: "obscura-decrypt-vault",
             name: "Decrypt vault",
             callback: () => {
                 let files = this.app.vault.getFiles();
