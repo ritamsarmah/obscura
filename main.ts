@@ -78,11 +78,11 @@ export default class Obscura extends Plugin {
 
     private xor(text: string): string {
         // Iterate through data and use index to XOR
-        let data = new Array(text.length);
+        let result = "";
         for (let i = 0; i < text.length; i++) {
-            data[i] = String.fromCharCode(text.charCodeAt(i) ^ i % 32);
+            result += String.fromCharCode(text.charCodeAt(i) ^ i % 32);
         }
 
-        return data.join("");
+        return result;
     }
 }
